@@ -1,0 +1,64 @@
+This Python function, words_to_number, converts a number written in words into its numerical representation. It handles numbers up to millions and accounts for different word formats, including hyphenated numbers (e.g., "forty-two") and numbers with unnecessary words like "and", "the", "of".
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+num_dict = {
+    "zero": 0, "one": 1, "two": 2, ..., "ninety": 90, "hundred": 100, "thousand": 1000, "million": 1000000
+}
+-Defines a dictionary num_dict that maps number words to their numerical values.
+-Includes single-digit numbers, teens, tens, and large numbers like "hundred", "thousand", and "million".
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+words = words.lower().replace('"', " ").replace("-", " ").replace(",", " ") \
+       .replace("'", " ").replace(".", " ").replace("and", " ").replace("of", " ") \
+       .replace("the", " ").replace("to", " ").replace("a", " ").replace("an", " ").split()
+-Converts the input text to lowercase for consistency.
+-Removes unwanted characters (", -, ,, ., ') that may interfere with number recognition.
+-Removes unnecessary words like "and", "the", "of", "to", "a", "an" to simplify processing.
+-Splits the text into a list of words.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+total = 0
+current = 0
+
+-total: Stores the final computed number.
+-current: Stores the value of smaller units before encountering multipliers like "hundred" or "thousand".
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+for word in words:
+    if word in num_dict:
+        value = num_dict[word]
+        if value < 100:  # Numbers below 100 (e.g., "twenty", "five")
+            current += value
+        elif value == 100:  # Handling "hundred" (e.g., "three hundred")
+            current *= value
+        elif value >= 1000:  # Handling "thousand" and "million"
+            total += current * value
+            current = 0
+
+-Iterates through each word in the processed list.
+-If the word is in num_dict, it retrieves its numeric value.
+-If the value is less than 100, it's simply added to current.
+-If the word is "hundred", current is multiplied by 100.
+-If the word is "thousand" or "million", the value of current is multiplied accordingly, added to total, and current is reset.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+total += current
+return total
+
+-After processing all words, any remaining value in current is added to total, which is then returned.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+test_cases = input("Enter the text: ")
+test_cases = [test_cases]
+
+for case in test_cases:
+    print(f"{case} -> {words_to_number(case)}")
+
+-Takes user input as a text string.
+-Passes it to the words_to_number function.
+-Prints the corresponding numerical value.
+
